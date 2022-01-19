@@ -10,7 +10,7 @@ import {
   Button,
   CssBaseline,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { commerce } from '../../../lib/commerce';
 import useStyles from './styles';
 import AddressForm from '../AddressForm';
@@ -22,7 +22,9 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
   const [checkoutToken, setCheckoutToken] = useState(null);
   const [activeStep, setActiveStep] = useState(0);
   const [shippingData, setShippingData] = useState({});
+  const [isFinished, setIsFinished] = useState(false);
   const classes = useStyles();
+  let navigate = useNavigate();
 
   useEffect(() => {
     const generateToken = async () => {
@@ -30,7 +32,9 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         const token = await commerce.checkout.generateToken(cart.id, { type: 'cart' });
 
         setCheckoutToken(token);
-      } catch (error) {}
+      } catch (error) {
+        navigate('/');
+      }
     };
 
     generateToken();
@@ -45,6 +49,12 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
     nextStep();
   };
 
+  const timeout = () => {
+    setTimeout(() => {
+      setIsFinished(true);
+    }, 3000);
+  };
+
   let Confirmation = () =>
     order.customer ? (
       <>
@@ -54,6 +64,17 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
           </Typography>
           <Divider className={classes.divider} />
           <Typography variant="subtitle2">Order ref: {order.customer_reference}</Typography>
+        </div>
+        <br />
+        <Button component={Link} to="/" variant="outlined" type="button">
+          Back to Home
+        </Button>
+      </>
+    ) : isFinished ? (
+      <>
+        <div>
+          <Typography variant="h5">Thank you for your purchase!</Typography>
+          <Divider className={classes.divider} />
         </div>
         <br />
         <Button component={Link} to="/" variant="outlined" type="button">
@@ -86,6 +107,7 @@ const Checkout = ({ cart, order, onCaptureCheckout, error }) => {
         nextStep={nextStep}
         backStep={backStep}
         onCaptureCheckout={onCaptureCheckout}
+        timeout={timeout}
       />
     );
   return (
