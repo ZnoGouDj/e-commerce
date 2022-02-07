@@ -1,8 +1,6 @@
-## Description:
-Fully functional eCommerce application using commerce.js
+### [Live Site](https://commercejs-store-project.netlify.app/)
 
-###### Stack:
-React, Commerce.js, Stripe
+![Chat Application](https://i.ibb.co/mbdXcnx/Commerce-JS-App.png)
 
-###### Link:
-[View Project](https://commercejs-store-project.netlify.app/)
+## Introduction:
+Fully functional eCommerce application using commerce.js (React, Commerce.js, Stripe)
